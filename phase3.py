@@ -162,7 +162,8 @@ def pChamp(_conn):
 
 def addTeam(_conn):
     print("Enter Team Size")
-    teamsize=int(input())
+    teamsize=int(input())+1
+    temp=1
     cur=_conn.cursor()
     Tcur=cur.execute("SELECT MAX(T_ID) FROM Team")
     T_ID=filter(str.isdigit,str(Tcur.fetchall()))
@@ -170,7 +171,7 @@ def addTeam(_conn):
     TDcur=cur.execute("SELECT MAX(T_teamID) FROM Team")
     TD_ID=filter(str.isdigit,str(TDcur.fetchall()))
     TD_ID="".join(TD_ID) 
-    while(teamsize>0):
+    while(temp!=teamsize):
         T_ID=str(T_ID)
         print("Current team NO " + TD_ID + " Enter one number above")
         print("Enter Team ID ")
@@ -180,11 +181,12 @@ def addTeam(_conn):
         Ncur=cur.execute("SELECT C_champID FROM Champion WHERE C_name=?",(name,))
         cID=filter(str.isdigit,str(Ncur.fetchall()))
         cID="".join(cID)
+        T_ID=int(T_ID)+temp
         result=[T_ID,TeamID,cID]
-        T_ID=int(T_ID)+1
+        print(T_ID)
         sql="""INSERT INTO Team(T_ID,T_teamID,T_champID) VALUES(?,?,?)"""
         cur.execute(sql,result)    
-        teamsize-=1
+        temp+=1
     _conn.commit()
     mainMenu(_conn)
 
